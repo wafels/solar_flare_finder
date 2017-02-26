@@ -5,12 +5,17 @@ from scipy.stats import poisson
 from sunpy.time import parse_time
 
 # Friday 20 January 2017 flare numbers
-numbers_20170120 = {"num": np.asarray([338, 1394, 2557, 1903, 779, 541, 28, 2]),
-                    "date": "2017/01/20"}
+#flares = {"num": np.asarray([338, 1394, 2557, 1903, 779, 541, 28, 2]),#
+#          "possible": np.asarray([338, 1394, 2557, 1903, 779, 541, 28, 2]),
+#          "date": "2017/01/20"}
+
+flares = {"num": np.asarray([127, 1432, 2371, 2035, 720, 228, 37, 3]),
+          "possible": np.asarray([6953, 6953, 6953, 6953, 6953, 6953, 6953, 934]),
+          "date": "2017/02/26"}
+
 
 # Analysis of the flare numbers
-num = numbers_20170120["num"]
-frac = num / np.sum(num)
+frac = flares["num"]/flares["possible"]
 n = np.arange(0, len(frac))
 mu = np.sum(n*frac)
 poi = poisson(mu)
