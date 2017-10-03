@@ -1,7 +1,7 @@
 from datetime import timedelta
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import poisson
+from scipy.stats import poisson, binom
 from sunpy.time import parse_time
 
 # Friday 20 January 2017 flare numbers
