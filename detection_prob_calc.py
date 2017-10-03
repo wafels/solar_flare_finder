@@ -38,7 +38,7 @@ class FlareDetectionProbability(object):
 timerange = [None, None]
 
 
-summary_names = ['mean', 'median', 'mode', 'lower68', 'higher68', 'n']
+summary_names = ['n', 'mean', 'median', 'mode', 'std', 'lower68', 'higher68']
 
 # Numbers taken from the paper
 xrt_sff = SolarFlareFinder(xrt, FlareDetectionProbability(timerange, 0.57))
@@ -85,14 +85,15 @@ for i in range(1, len(all_sff)+1):
 
         # Calculate summaries of the distribution
         mode = x[np.argmax(y)]
-        mean = np.float64(b.stats(moments='m'))
+        mean, variance = np.float64(b.stats(moments='mv'))
+        std = np.sqrt(variance)
         interval = b.interval(alpha=0.6827)
         big_interval = b.interval(alpha=0.9999)
         median = np.int(b.median())
 
-        summary_stats = {'mean': mean, 'median': median, 'mode': mode,
+        summary_stats = {'n': i, 'mean': mean, 'median': median, 'mode': mode, 'std': std,
                          'lower68': interval[0], 'higher68': interval[1],
-                         'n': i}
+                         }
 
         # Make the plot and write it out
         instr_joint = ", ".join(instr_joint)
@@ -110,7 +111,7 @@ for i in range(1, len(all_sff)+1):
         plt.xlabel('number of flares')
         plt.ylabel('probability')
         plt.title('{:s} probability mass function'.format(instr_joint))
-        plt.legend()
+        plt.legend(loc="upper right")
         filename = 'binomial_i{:n}_{:s}'.format(i, instr_joint)
         filepath = '{}/{}'.format(imgroot, filename)
         plt.savefig(filepath)
@@ -129,5 +130,5 @@ for i in range(1, len(all_sff)+1):
 
 # Write the table out
 filename = 'summary_stats.csv'
-filepath = '{}/{}'.format(csvroot, filename)
+filepath = '{}/{}'.format(csvroot, filename, overwrite=True)
 t.write(filepath)
